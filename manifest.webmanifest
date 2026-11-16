@@ -1,0 +1,11 @@
+{
+  "name": "POS คาเฟ่",
+  "short_name": "POS",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#F6EFE6",
+  "theme_color": "#2E1C12",
+  "icons": [{ "src": "img/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }]
+}

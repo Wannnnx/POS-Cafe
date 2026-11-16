@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#2E1C12">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>POS คาเฟ่</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="img/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="img/icon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=Noto+Serif+Thai:wght@600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+
+<!-- ===== หน้าเข้าสู่ระบบ ===== -->
+<section id="login" class="login" hidden>
+  <div class="login-card">
+    <div class="logo"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 8h11v6a5 5 0 0 1-5 5h-1a5 5 0 0 1-5-5z"/><path d="M16 10h1.5a2.5 2.5 0 0 1 0 5H16"/><path d="M8 3v2M11 3v2M14 3v2"/></svg></div>
+    <h1 class="serif shop-name">คาเฟ่ของฉัน</h1>
+    <p class="muted">ใส่ PIN พนักงานเพื่อเริ่มขาย</p>
+    <div class="pin-dots" id="pinDots" aria-live="polite"><span></span><span></span><span></span><span></span></div>
+    <p class="error" id="loginError" role="alert"></p>
+    <div class="pinpad" id="pinpad">
+      <button type="button" data-k="1">1</button><button type="button" data-k="2">2</button><button type="button" data-k="3">3</button>
+      <button type="button" data-k="4">4</button><button type="button" data-k="5">5</button><button type="button" data-k="6">6</button>
+      <button type="button" data-k="7">7</button><button type="button" data-k="8">8</button><button type="button" data-k="9">9</button>
+      <button type="button" data-k="set" class="ghost" aria-label="ตั้งค่า"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button>
+      <button type="button" data-k="0">0</button>
+      <button type="button" data-k="del" class="ghost" aria-label="ลบ"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 5H9l-6 7 6 7h12z"/><path d="M17 9l-6 6M11 9l6 6"/></svg></button>
+    </div>
+  </div>
+</section>
+
+<!-- ===== แอปหลัก ===== -->
+<div id="app" class="app" hidden>
+  <nav class="rail" aria-label="เมนูหลัก">
+    <div class="rail-logo" aria-hidden="true"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 8h11v6a5 5 0 0 1-5 5h-1a5 5 0 0 1-5-5z"/><path d="M16 10h1.5a2.5 2.5 0 0 1 0 5H16"/><path d="M8 3v2M11 3v2M14 3v2"/></svg></div>
+    <button type="button" class="rail-btn" data-view="sell"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 4h2l2.4 11h10.2L20 7H6.2"/><circle cx="9" cy="19" r="1.5"/><circle cx="17" cy="19" r="1.5"/></svg><span>ขาย</span></button>
+    <button type="button" class="rail-btn owner-only" data-view="report"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg><span>รายงาน</span></button>
+    <button type="button" class="rail-btn" data-view="settings"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/></svg><span>ตั้งค่า</span></button>
+    <div class="rail-spacer"></div>
+    <button type="button" class="avatar" id="logoutBtn" aria-label="ออกจากระบบ" title="ออกจากระบบ"></button>
+  </nav>
+
+  <!-- ขาย -->
+  <main class="view view-sell" id="view-sell">
+    <header class="topbar">
+      <div>
+        <div class="serif shop-name title">คาเฟ่ของฉัน</div>
+        <div class="muted small" id="subline"></div>
+      </div>
+      <div class="topbar-right">
+        <label class="search">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+          <input type="search" id="search" placeholder="ค้นหาเมนู" aria-label="ค้นหาเมนู" autocomplete="off">
+        </label>
+        <span class="sync" id="syncChip" role="status"><i></i><span>Sync แล้ว</span></span>
+      </div>
+    </header>
+    <div class="chips" id="chips" role="toolbar" aria-label="หมวดเมนู"></div>
+    <div class="grid" id="grid"></div>
+  </main>
+
+  <!-- ออเดอร์ -->
+  <aside class="cart" id="cart" aria-label="ออเดอร์">
+    <div class="cart-head">
+      <div class="row between baseline">
+        <div class="serif h2">ออเดอร์ปัจจุบัน</div>
+        <div class="row gap"><button type="button" class="link-btn" id="clearCart">ล้าง</button><button type="button" class="btn mobile-only" id="closeCart">ปิด</button></div>
+      </div>
+      <div class="seg" role="group" aria-label="ประเภทออเดอร์">
+        <button type="button" data-type="ทานที่ร้าน" class="on">ทานที่ร้าน</button>
+        <button type="button" data-type="กลับบ้าน">กลับบ้าน</button>
+      </div>
+    </div>
+    <div class="lines" id="lines"></div>
+    <div class="cart-foot">
+      <div class="dash"></div>
+      <div class="row between muted"><span>ยอดรวม</span><span id="subtotal">฿0</span></div>
+      <div class="row between muted"><label for="discount">ส่วนลด (บาท)</label><input id="discount" type="number" inputmode="numeric" min="0" step="1" value="0" class="disc"></div>
+      <div class="row between baseline"><span class="strong">ยอดสุทธิ</span><span class="serif total" id="total">฿0</span></div>
+      <div class="pay" role="group" aria-label="วิธีชำระ">
+        <button type="button" data-pay="เงินสด" class="on"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/></svg>เงินสด</button>
+        <button type="button" data-pay="QR PromptPay"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3M21 14v7h-7"/></svg>QR PromptPay</button>
+      </div>
+      <button type="button" class="charge" id="chargeBtn" disabled><span>ชำระเงิน</span><span id="chargeTotal">฿0</span></button>
+    </div>
+  </aside>
+
+  <!-- แถบตะกร้า (มือถือ) -->
+  <button type="button" class="cartbar" id="cartbar" hidden><span id="cartbarCount">0 รายการ</span><span>ดูออเดอร์ <b id="cartbarTotal">฿0</b></span></button>
+
+  <!-- รายงาน -->
+  <main class="view view-report" id="view-report" hidden>
+    <header class="topbar">
+      <div class="serif title">รายงานยอดขาย</div>
+      <div class="topbar-right">
+        <label class="sr-only" for="reportDate">วันที่</label>
+        <input type="date" id="reportDate" class="date">
+        <button type="button" class="btn" id="reportReload">โหลดใหม่</button>
+      </div>
+    </header>
+    <div class="report" id="report"><p class="muted">กำลังโหลด…</p></div>
+  </main>
+
+  <!-- ตั้งค่า -->
+  <main class="view view-settings" id="view-settings" hidden>
+    <header class="topbar"><div class="serif title">ตั้งค่า</div></header>
+    <form class="settings" id="settingsForm">
+      <label>ชื่อร้าน<input name="shopName" required></label>
+      <label>ที่อยู่ (แสดงบนใบเสร็จ)<input name="address"></label>
+      <label>เบอร์โทร (แสดงบนใบเสร็จ)<input name="phone"></label>
+      <label>ข้อความท้ายใบเสร็จ<input name="footer"></label>
+      <label>ชื่อเครื่องนี้<input name="device" required></label>
+      <label>URL ของ Web App (ลงท้าย /exec)<input name="apiUrl" type="url" required></label>
+      <label class="check"><input type="checkbox" name="autoPrint"> พิมพ์ใบเสร็จอัตโนมัติหลังชำระเงิน</label>
+      <div class="row gap"><button type="submit" class="btn primary">บันทึก</button><button type="button" class="btn" id="reloadMenu">โหลดเมนูใหม่</button></div>
+      <p class="muted small" id="settingsMsg" role="status"></p>
+      <p class="muted small" id="queueInfo"></p>
+    </form>
+  </main>
+</div>
+
+<!-- เลือกตัวเลือก -->
+<dialog id="optDialog" class="sheet">
+  <form method="dialog">
+    <div class="opt-head"><img id="optImg" alt=""><div><div class="serif h2" id="optName"></div><div class="muted" id="optPrice"></div></div></div>
+    <div class="opt-list" id="optList"></div>
+    <button value="cancel" class="btn block">ยกเลิก</button>
+  </form>
+</dialog>
+
+<!-- ชำระเงินสำเร็จ -->
+<dialog id="doneDialog" class="sheet">
+  <div class="done">
+    <div class="done-ic"><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#2F5D34" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg></div>
+    <div class="serif h1">ชำระเงินสำเร็จ</div>
+    <div class="muted" id="doneInfo"></div>
+    <div class="change" id="changeBox" hidden>
+      <label for="cashIn">รับเงินมา (บาท)</label>
+      <input id="cashIn" type="number" inputmode="numeric" min="0">
+      <div class="quick" id="quickCash"></div>
+      <div class="strong" id="changeOut"></div>
+    </div>
+    <button type="button" class="btn block" id="printBtn">พิมพ์ใบเสร็จ</button>
+    <button type="button" class="charge block" id="newOrderBtn">เริ่มออเดอร์ใหม่</button>
+  </div>
+</dialog>
+
+<div class="toast" id="toast" role="status" hidden></div>
+
+<!-- ใบเสร็จสำหรับพิมพ์ -->
+<div id="receipt" class="receipt" aria-hidden="true"></div>
+
+<script src="app.js"></script>
+</body>
+</html>
